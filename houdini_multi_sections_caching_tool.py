@@ -23,19 +23,20 @@ class Stats():
 
     def handleCalc(self):
         
-        selType = hou.selectedNodes()[0].type()
+        selNode = hou.selectedNodes()[0]
+        selType = selNode.type()
         if str(selType).find('filecache') == -1:
-            print('fuck you!')
             QMessageBox.about(self.window,
                     'Error',
-                    'Select a File Cache Node!'
+                    'Select a File Cache Node!!!'
                     )
-
-
-#------------eval selected type---------------
-
-        
-        
-
-stats = Stats()
-stats.window.show()
+#------------eval selected type---------------        
+        elif selNode.parm('trange').eval() == 0:
+             QMessageBox.about(self.window,
+                    'Error',
+                    'Set Frame Range!!!'
+                    )
+#------------check frame range----------------
+        else:
+            sf = selNode.parm('f1').eval()
+            ef = selNode.parm('f2').eval()
