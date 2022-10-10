@@ -1,9 +1,7 @@
-from PySide2.QtWidgets import QApplication, QMainWindow, QPushButton,  QPlainTextEdit,QMessageBox
-
 from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
-import hou as hou
+import hou
 
 class Stats():
     def __init__(self):
