@@ -27,7 +27,7 @@ class Stats():
 
     def handleCalc(self):
     
-        info = self.lineEdit.toPlainText()
+        sections = int(self.lineEdit.text())
         
         selNode = hou.selectedNodes()[0]
         selType = selNode.type()
@@ -47,6 +47,7 @@ class Stats():
             sf = selNode.parm('f1').eval()
             ef = selNode.parm('f2').eval()
             
+        print(sections.type())
             
 
 
