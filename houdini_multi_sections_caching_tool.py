@@ -22,13 +22,20 @@ class Stats():
 
 
     def handleCalc(self):
-        info= self.textEdit.toPlainText()
-
-        QMessageBox.about(self.window,
-                    'test',
-                    f'''test'''
+        
+        selType = hou.selectedNodes()[0].type()
+        if str(selType).find('filecache') == -1:
+            print('fuck you!')
+            QMessageBox.about(self.window,
+                    'Error',
+                    'Select a File Cache Node!'
                     )
 
+
+#------------eval selected type---------------
+
+        
+        
 
 stats = Stats()
 stats.window.show()
