@@ -10,10 +10,14 @@ class Stats():
         self.window.move(300, 300)
         self.window.setWindowTitle('Multi Sections Caching Tool')
 
-        self.textEdit = QPlainTextEdit(self.window)
-        self.textEdit.setPlaceholderText("Input section number")
-        self.textEdit.move(10, 25)
-        self.textEdit.resize(300, 50)
+        self.lineEdit = QLineEdit(self.window)
+        self.lineEdit.setPlaceholderText("Input section number")
+        self.onlyInt = QIntValidator()
+        self.onlyInt.setRange(0, 9999)
+        self.lineEdit.setValidator(self.onlyInt)
+
+        self.lineEdit.move(10, 25)
+        self.lineEdit.resize(300, 50)
 
         self.button = QPushButton('Run', self.window)
         self.button.move(380, 35)
@@ -22,6 +26,8 @@ class Stats():
 
 
     def handleCalc(self):
+    
+        info = self.lineEdit.toPlainText()
         
         selNode = hou.selectedNodes()[0]
         selType = selNode.type()
@@ -40,3 +46,12 @@ class Stats():
         else:
             sf = selNode.parm('f1').eval()
             ef = selNode.parm('f2').eval()
+            
+            
+
+
+        
+        
+
+stats = Stats()
+stats.window.show()
