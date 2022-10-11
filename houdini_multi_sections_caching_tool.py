@@ -56,10 +56,12 @@ class Stats():
             copyNode.setName('TMP_multi_caching_tool_section'+str(n))
             copyNode.parmTuple('f').deleteAllKeyframes()
             copyNode.moveToGoodPosition()
+#-----------------create instances-------------------------------------
             copyNode.parm('tpostrender').set(1)
-            copyNode.parm('lpostrender').set(1)
-            copyNode.parm('postrender').set()
-            
+            copyNode.parm('lpostrender').set('python')
+            copyNode.parm('postrender').setExpression('tmp=hou.parent()\ntmp.destroy()')
+#-----------------set post render script to delete node------------------------
+
             if n == 0:
                 copyNode.setParms({'f1':(sections-1)*sr+1,})
                 copyNode.setName('TMP_multi_caching_tool_section'+str(sections))
