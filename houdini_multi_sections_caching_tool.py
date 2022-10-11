@@ -45,22 +45,29 @@ class Stats():
                     'Set Frame Range!!!'
                     )
 #------------check frame range----------------
+        elif sections is None:
+             QMessageBox.about(self.window,
+                    'Error',
+                    'Set Section Number!!!'
+                    )
+                
         else:
             sf = selNode.parm('f1').eval()
             ef = selNode.parm('f2').eval()
             fr = ef - sf + 1
             sr = fr/sections
             
+            subNode = parent.createNode('subnet','TMP_multi_caching_tool_subnet')
+            subNode.setColor(hou.Color(0,0,0))            
+            input = subNode.path()+'/1'
+            
         for n in range(sections):       
-            copyNode = parent.copyItems((selNode,))[0]
+            copyNode = subNode.copyItems((selNode,))[0]
             copyNode.setName('TMP_multi_caching_tool_section'+str(n))
             copyNode.parmTuple('f').deleteAllKeyframes()
             copyNode.moveToGoodPosition()
+            copyNode.setInput(0,hou.item(input))
 #-----------------create instances-------------------------------------
-            copyNode.parm('tpostrender').set(1)
-            copyNode.parm('lpostrender').set('python')
-            copyNode.parm('postrender').setExpression('tmp=hou.parent()\ntmp.destroy()')
-#-----------------set post render script to delete node------------------------
 
             if n == 0:
                 copyNode.setParms({'f1':(sections-1)*sr+1,})
@@ -69,7 +76,7 @@ class Stats():
             else:
                 copyNode.setParms({'f1':sf+sr*(n-1),'f2':sf+sr*n-1})
 
-        
+            copyNode.parm('cookoutputnode').pressButton()
         
 
 stats = Stats()
