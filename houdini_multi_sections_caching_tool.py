@@ -64,9 +64,11 @@ class Stats():
         for n in range(sections):       
             copyNode = subNode.copyItems((selNode,))[0]
             copyNode.setName('TMP_multi_caching_tool_section'+str(n))
+            copyNode.parm('loadfromdisk').set(0)
             copyNode.parmTuple('f').deleteAllKeyframes()
             copyNode.moveToGoodPosition()
             copyNode.setInput(0,hou.item(input))
+  
 #-----------------create instances-------------------------------------
 
             if n == 0:
@@ -76,7 +78,7 @@ class Stats():
             else:
                 copyNode.setParms({'f1':sf+sr*(n-1),'f2':sf+sr*n-1})
 
-            copyNode.parm('cookoutputnode').pressButton()
+#            copyNode.parm('cookoutputnode').pressButton()
         
 
 stats = Stats()
