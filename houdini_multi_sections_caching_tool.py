@@ -2,6 +2,8 @@ from PySide2.QtCore import *
 from PySide2.QtGui import *
 from PySide2.QtWidgets import *
 import hou
+import toolutils
+import re
 
 class Stats():
     def __init__(self):
@@ -63,18 +65,21 @@ class Stats():
             
             path = selNode.parm('file').unexpandedString()
             
+            upNode = selNode.input(0)
+            
             subNode = parent.createNode('subnet','TMP_multi_caching_tool_subnet')
             subNode.setColor(hou.Color(0,0,0))            
             input = subNode.path()+'/1'
             subNode.moveToGoodPosition()
+            subNode.setInput(0,upNode)
             
             mergeNode = subNode.createNode('merge')
             mergeNode.moveToGoodPosition()
             
             visNode = subNode.createNode('visibility')
-            visNode.moveToGoodPosition()
-            
+            visNode.moveToGoodPosition()    
             visNode.setInput(0,mergeNode)
+            visNode.setDisplayFlag(1)
 
             
             for n in range(sections):
@@ -89,12 +94,15 @@ class Stats():
                 timeNode = subNode.createNode('timeshift')
                 timeNode.setName('TMP_multi_caching_tool_timeshift'+str(n))
                 timeNode.setInput(0,fileNode)
-                timeNode.parm('frame').setExpression('$F+'+str(n*sections))
+                timeNode.parm('frame').setExpression('$F+'+str(n*sr))
                     
                 mergeNode.setInput(n,timeNode)
     
 #-----------------create instances-------------------------------------                
-
+           flipbookSettingStash = toolutils.sceneViewer().flipbookSettings().stash()
+           flipbookSettingStash.sessionLabel('tmp')
+           flipbookSettingStash.frameRange((sf, sf+sr))
+           toolutils.sceneViewer().flipbook(settings = flipbookSettingStash)
             
             
         
