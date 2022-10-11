@@ -55,50 +55,48 @@ class Stats():
 #------------check frame range----------------
                 
         else:
-        
-            ret = QMessageBox.question(self.window,
-                    'Save!',
-                    'File will be save!!!'
-                    )
-            if ret == QMessageBox.Yes:
-                    
-                sf = selNode.parm('f1').eval()
-                ef = selNode.parm('f2').eval()
-                fr = ef - sf + 1
-                sr = fr/sections
+            
+            sf = selNode.parm('f1').eval()
+            ef = selNode.parm('f2').eval()
+            fr = ef - sf + 1
+            sr = fr/sections
+            
+            path = selNode.parm('file').unexpandedString()
+            
+            subNode = parent.createNode('subnet','TMP_multi_caching_tool_subnet')
+            subNode.setColor(hou.Color(0,0,0))            
+            input = subNode.path()+'/1'
+            subNode.moveToGoodPosition()
+            
+            ropList = []
+            
+            for n in range(sections):
+            
+                fileNode = subNode.createNode('file')
+                fileNode.setName('TMP_multi_caching_tool_section'+str(n))
+                fileNode.moveToGoodPosition()
+                fileNode.setInput(0,hou.item(input))                    
+                fileNode.parm('filemode').set(2)
+                fileNode.parm('file').set(path) 
                 
-                path = selNode.parm('file').unexpandedString()
+                timeNode = subNode.createNode('timeshift')
+                timeNode.setName('TMP_multi_caching_tool_timeshift'+str(n))
+                timeNode.
                 
-                subNode = parent.createNode('subnet','TMP_multi_caching_tool_subnet')
-                subNode.setColor(hou.Color(0,0,0))            
-                input = subNode.path()+'/1'
-                subNode.moveToGoodPosition()
                 
-                ropList = []
-                
-                for n in range(sections):
-                
-                    copyNode = subNode.createNode('rop_geometry')
-                    copyNode.setName('TMP_multi_caching_tool_section'+str(n))
-                    copyNode.parm('trange').set(1)
-                    copyNode.parmTuple('f').deleteAllKeyframes()
-                    copyNode.moveToGoodPosition()
-                    copyNode.setInput(0,hou.item(input))
-                    
-                    ropList.append(copyNode)
-        
-                    if n == 0:
-                        copyNode.setParms({'f1':(sections-1)*sr+1,})
-                        copyNode.setName('TMP_multi_caching_tool_section'+str(sections))
-                        
-                    else:
-                        copyNode.setParms({'f1':sf+sr*(n-1),'f2':sf+sr*n-1})
-    #-----------------create instances-------------------------------------                
-                hou.hipFile.saveAndBackup()
-    #------------------save file--------------------------
     
-                for i in ropList:
-                    i.parm('executebackground')
+                if n == 0:
+                    fileNode.setParms({'f1':(sections-1)*sr+1,})
+                    fileNode.setName('TMP_multi_caching_tool_section'+str(sections))
+                    
+                else:
+                    fileNode.setParms({'f1':sf+sr*(n-1),'f2':sf+sr*n-1})
+#-----------------create instances-------------------------------------                
+            hou.hipFile.saveAndBackup()
+#------------------save file--------------------------
+
+            for i in ropList:
+                i.parm('executebackground')
             
             
         
