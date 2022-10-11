@@ -53,14 +53,16 @@ class Stats():
             
         print(sf,ef,fr,lf)
             
-        for n in range(sections):
-        
+        for n in range(sections):       
+            copyNode = parent.copyItems((selNode,))
+            copyNode.setName('TMP_multi_caching_tool_section'+str(n))
+            copyNode.moveToGoodPosition()
+            
             if n == sections:
                 pass
-             
+                
             else:
-                parent.copyItems((selNode,))
-
+                copyNode.setParms({'f1':sf+section*n,'f2':sf+section*(n+1)})
 
         
         
