@@ -68,7 +68,14 @@ class Stats():
             input = subNode.path()+'/1'
             subNode.moveToGoodPosition()
             
-            ropList = []
+            mergeNode = subNode.createNode('merge')
+            mergeNode.moveToGoodPosition()
+            
+            visNode = subNode.createNode('visibility')
+            visNode.moveToGoodPosition()
+            
+            visNode.setInput(0,mergeNode)
+
             
             for n in range(sections):
             
@@ -77,26 +84,17 @@ class Stats():
                 fileNode.moveToGoodPosition()
                 fileNode.setInput(0,hou.item(input))                    
                 fileNode.parm('filemode').set(2)
-                fileNode.parm('file').set(path) 
+                fileNode.parm('file').set(path)            
                 
                 timeNode = subNode.createNode('timeshift')
                 timeNode.setName('TMP_multi_caching_tool_timeshift'+str(n))
-                timeNode.
-                
-                
-    
-                if n == 0:
-                    fileNode.setParms({'f1':(sections-1)*sr+1,})
-                    fileNode.setName('TMP_multi_caching_tool_section'+str(sections))
+                timeNode.setInput(0,fileNode)
+                timeNode.parm('frame').setExpression('$F+'+str(n*sections))
                     
-                else:
-                    fileNode.setParms({'f1':sf+sr*(n-1),'f2':sf+sr*n-1})
+                mergeNode.setInput(n,timeNode)
+    
 #-----------------create instances-------------------------------------                
-            hou.hipFile.saveAndBackup()
-#------------------save file--------------------------
 
-            for i in ropList:
-                i.parm('executebackground')
             
             
         
