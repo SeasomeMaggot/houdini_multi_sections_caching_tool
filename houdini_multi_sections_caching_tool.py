@@ -23,7 +23,7 @@ class Stats():
         self.button.move(380, 35)
 
         self.button.clicked.connect(self.handleCalc)
-
+#-------------UI-----------------------------
 
     def handleCalc(self):
     
@@ -31,6 +31,8 @@ class Stats():
         
         selNode = hou.selectedNodes()[0]
         selType = selNode.type()
+        parent = selNode.parent()
+        
         if str(selType).find('filecache') == -1:
             QMessageBox.about(self.window,
                     'Error',
@@ -46,9 +48,18 @@ class Stats():
         else:
             sf = selNode.parm('f1').eval()
             ef = selNode.parm('f2').eval()
+            fr = ef - sf + 1
+            lf = fr % sections
             
-        print(sections.type())
+        print(sf,ef,fr,lf)
             
+        for n in range(sections):
+        
+            if n == sections:
+                pass
+             
+            else:
+                parent.copyItems((selNode,))
 
 
         
