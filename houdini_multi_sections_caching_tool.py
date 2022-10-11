@@ -58,7 +58,7 @@ class Stats():
         
             ret = QMessageBox.question(self.window,
                     'Save!',
-                    'You must save file before caching!!!'
+                    'File will be save!!!'
                     )
             if ret == QMessageBox.Yes:
                     
@@ -86,7 +86,6 @@ class Stats():
                     copyNode.setInput(0,hou.item(input))
                     
                     ropList.append(copyNode)
-    #-----------------create instances-------------------------------------
         
                     if n == 0:
                         copyNode.setParms({'f1':(sections-1)*sr+1,})
@@ -94,7 +93,12 @@ class Stats():
                         
                     else:
                         copyNode.setParms({'f1':sf+sr*(n-1),'f2':sf+sr*n-1})
-                    
+    #-----------------create instances-------------------------------------                
+                hou.hipFile.saveAndBackup()
+    #------------------save file--------------------------
+    
+                for i in ropList:
+                    i.parm('executebackground')
             
             
         
