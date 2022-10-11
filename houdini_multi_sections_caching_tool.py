@@ -61,11 +61,13 @@ class Stats():
             sf = selNode.parm('f1').eval()
             ef = selNode.parm('f2').eval()
             fr = ef - sf + 1
-            sr = fr/sections
+            sr = int(fr/sections)
             
             path = selNode.parm('file').unexpandedString()
             
             upNode = selNode.input(0)
+            
+            displayNode = selNode.parent().displayNode()
             
             subNode = parent.createNode('subnet','TMP_multi_caching_tool_subnet')
             subNode.setColor(hou.Color(0,0,0))            
@@ -80,6 +82,8 @@ class Stats():
             visNode.moveToGoodPosition()    
             visNode.setInput(0,mergeNode)
             visNode.setDisplayFlag(1)
+            
+            subNode.setDisplayFlag(1)
 
             
             for n in range(sections):
@@ -94,18 +98,19 @@ class Stats():
                 timeNode = subNode.createNode('timeshift')
                 timeNode.setName('TMP_multi_caching_tool_timeshift'+str(n))
                 timeNode.setInput(0,fileNode)
+                timeNode.parm('frame').deleteAllKeyframes()
                 timeNode.parm('frame').setExpression('$F+'+str(n*sr))
                     
                 mergeNode.setInput(n,timeNode)
     
 #-----------------create instances-------------------------------------                
-           flipbookSettingStash = toolutils.sceneViewer().flipbookSettings().stash()
-           flipbookSettingStash.sessionLabel('tmp')
-           flipbookSettingStash.frameRange((sf, sf+sr))
-           toolutils.sceneViewer().flipbook(settings = flipbookSettingStash)
+            flipbookSettingStash = toolutils.sceneViewer().flipbookSettings().stash()
+            flipbookSettingStash.sessionLabel('tmp')
+            flipbookSettingStash.frameRange((sf, sf+sr-1))
+            toolutils.sceneViewer().flipbook(settings = flipbookSettingStash)
             
-            
-        
+            subNode.destroy()
+            displayNode.setDisplayFlag(1)        
 
 stats = Stats()
 stats.window.show()
