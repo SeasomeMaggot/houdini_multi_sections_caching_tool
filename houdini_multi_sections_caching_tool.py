@@ -57,28 +57,38 @@ class Stats():
             fr = ef - sf + 1
             sr = fr/sections
             
+            path = selNode.parm('file').unexpandedString()
+            
             subNode = parent.createNode('subnet','TMP_multi_caching_tool_subnet')
             subNode.setColor(hou.Color(0,0,0))            
             input = subNode.path()+'/1'
+            subNode.moveToGoodPosition()
             
-        for n in range(sections):       
-            copyNode = subNode.copyItems((selNode,))[0]
-            copyNode.setName('TMP_multi_caching_tool_section'+str(n))
-            copyNode.parm('loadfromdisk').set(0)
-            copyNode.parmTuple('f').deleteAllKeyframes()
-            copyNode.moveToGoodPosition()
-            copyNode.setInput(0,hou.item(input))
-  
-#-----------------create instances-------------------------------------
-
-            if n == 0:
-                copyNode.setParms({'f1':(sections-1)*sr+1,})
-                copyNode.setName('TMP_multi_caching_tool_section'+str(sections))
+            ropList = []
+            
+            for n in range(sections):
+            
+                copyNode = subNode.createNode('rop_geometry')
+                copyNode.setName('TMP_multi_caching_tool_section'+str(n))
+                copyNode.parm('trange').set(1)
+                copyNode.parmTuple('f').deleteAllKeyframes()
+                copyNode.moveToGoodPosition()
+                copyNode.setInput(0,hou.item(input))
                 
-            else:
-                copyNode.setParms({'f1':sf+sr*(n-1),'f2':sf+sr*n-1})
-
-#            copyNode.parm('cookoutputnode').pressButton()
+                ropList.append(copyNode)
+#-----------------create instances-------------------------------------
+    
+                if n == 0:
+                    copyNode.setParms({'f1':(sections-1)*sr+1,})
+                    copyNode.setName('TMP_multi_caching_tool_section'+str(sections))
+                    
+                else:
+                    copyNode.setParms({'f1':sf+sr*(n-1),'f2':sf+sr*n-1})
+                    
+            
+    
+            for i in ropList:
+                i.parm('executebackground').pressButton()
         
 
 stats = Stats()
