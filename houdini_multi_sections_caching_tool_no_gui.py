@@ -26,7 +26,7 @@ if upNode is None:
     raise hou.Error("File cache node must have an input!!!")
     
 path = selNode.parm('file').unexpandedString()
-if path.find($OS) != -1:
+if path.find('$OS') != -1:
     raise hou.Error("No $OS!!!")
     
 if selNode.parm('filemethod').eval() == 0:
