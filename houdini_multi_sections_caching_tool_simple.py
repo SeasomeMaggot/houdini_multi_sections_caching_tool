@@ -10,16 +10,24 @@ class Stats():
         self.window = QMainWindow()
         self.window.resize(500, 100)
         self.window.move(300, 300)
-        self.window.setWindowTitle('Multi Sections Caching Tool')
+        self.window.setWindowTitle('Multi Sections Caching Tool (No $OS in file path!)')
 
-        self.lineEdit = QLineEdit(self.window)
-        self.lineEdit.setPlaceholderText("Input section number (Warning: No $OS in file path!)")
+        self.lineEdit1 = QLineEdit(self.window)
+        self.lineEdit1.setPlaceholderText("start frame")
+        
+        self.lineEdit2 = QLineEdit(self.window)
+        self.lineEdit2.setPlaceholderText("end frame")
+        
         self.onlyInt = QIntValidator()
         self.onlyInt.setRange(0, 9999)
-        self.lineEdit.setValidator(self.onlyInt)
-
-        self.lineEdit.move(10, 25)
-        self.lineEdit.resize(300, 50)
+        self.lineEdit1.setValidator(self.onlyInt)
+        self.lineEdit2.setValidator(self.onlyInt)
+        
+        self.lineEdit1.move(10, 25)
+        self.lineEdit1.resize(150, 50)
+        
+        self.lineEdit2.move(200, 25)
+        self.lineEdit2.resize(150, 50)
 
         self.button = QPushButton('Run', self.window)
         self.button.move(380, 35)
@@ -30,7 +38,8 @@ class Stats():
     def handleCalc(self):
     
         try:
-            sections = int(self.lineEdit.text())
+            sf = int(self.lineEdit1.text())
+            ef = int(self.lineEdit2.text())
         except:
             QMessageBox.about(self.window,
                     'Error',
@@ -40,66 +49,44 @@ class Stats():
 #------------check frame range----------------
         
         try:
-            selNode = hou.selectedNodes()[0]
+            selNodes = hou.selectedNodes()
         except:
             QMessageBox.about(self.window,
                     'Error',
                     'Select a File Cache Node!!!'
                     )
             raise
-            
-        selType = selNode.type()
-        parent = selNode.parent()
         
+        """
         if str(selType).find('filecache') == -1:
             QMessageBox.about(self.window,
                     'Error',
                     'Select a File Cache Node!!!'
                     )
             raise
-            
-#------------eval selected type---------------        
-        elif selNode.parm('trange').eval() == 0:
-             QMessageBox.about(self.window,
-                    'Error',
-                    'Set Frame Range!!!'
-                    )
-#------------check frame range----------------
-                
-        else:
-                               
-            sf = selNode.parm('f1').eval()
-            ef = selNode.parm('f2').eval()
-            fr = ef - sf + 1
-            sr = int(fr/sections)
-            
-            path = selNode.parm('file').unexpandedString()
-            
-            upNode = selNode.input(0)
-            
-            subNode = parent.createNode('subnet','TMP_multi_caching_tool_subnet')
-            subNode.setColor(hou.Color(0,0,0))            
-            input = subNode.path()+'/1'
-            subNode.moveToGoodPosition()
-            subNode.setInput(0,upNode)                       
+           """ 
 
-            
-            for n in range(sections):            
-                fileNode = subNode.createNode('filecache')
-                fileNode.parm('filemethod').set(1)
-                fileNode.setName('TMP_multi_caching_tool_section'+str(n))
-                fileNode.moveToGoodPosition()
-                fileNode.setInput(0,hou.item(input))                    
-                fileNode.parm('file').set(path)
-                fileNode.parmTuple('f').deleteAllKeyframes()
+        fr = ef - sf + 1        
+        sections = (ef - sf)/len(selNodes)                                           
+        sr = int(fr/sections)       
                 
-                if n == 0:
-                    fileNode.parm('f1').set(sf+(sections-1)*sr)
-                    fileNode.parm('f2').set(ef)
-                else:
-                    fileNode.parm('f1').set(sf+sr*(n-1))
-                    fileNode.parm('f2').set(sf+sr*n-1)
+        for n, node in enumerate(selNodes):
+        
+            selType = node.type()
             
+            if str(selType).find('filecache') == -1:
+                QMessageBox.about(self.window,
+                    'Error',
+                    'File cache node ONLY!!!'
+                    )
+                raise
+            else:
+                node.parmTuple('f').deleteAllKeyframes()
+                node.parm('f1').set(sf+sr*n)
+                node.parm('f2').set(sf+sr*(n+1)-1)
+                
+                if n == len(selNodes) - 1:
+                    node.parm('f2').set(ef)
                 
 stats = Stats()
 stats.window.show()
