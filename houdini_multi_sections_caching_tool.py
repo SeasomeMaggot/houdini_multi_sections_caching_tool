@@ -67,19 +67,7 @@ class Stats():
 #------------check frame range----------------
                 
         else:
-            
-            ret = QMessageBox.question(self.window,
-                    'Mod',
-                    'Add a section for mod frame?'
-                    )
-            if ret == QMessageBox.Yes:
-                keepMod = 0
-            else:
-                keepMod = 1
-#---------------ask if add a section for mod frames----------            
-                    
-
-                    
+                               
             sf = selNode.parm('f1').eval()
             ef = selNode.parm('f2').eval()
             fr = ef - sf + 1
@@ -108,7 +96,7 @@ class Stats():
             subNode.setDisplayFlag(1)
 
             
-            for n in range(sections+keepMod):
+            for n in range(sections+1):
             
                 fileNode = subNode.createNode('file')
                 fileNode.setName('TMP_multi_caching_tool_section'+str(n))
