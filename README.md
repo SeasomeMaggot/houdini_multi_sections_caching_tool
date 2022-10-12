@@ -6,3 +6,6 @@ This tool is usefully for the nodes that only use single thread such as remesh.
 
 # Instruction:
 Copy the script to the python source editor. change the 'sections' to any interger you want. Then, select a File Cache node (No $OS in file path, No constructed file path, filecache node must have an input). Then click the apply button and the script will run.
+
+# PS:
+I found that Qt makes PDG fail during coding. So I delete all the gui.
