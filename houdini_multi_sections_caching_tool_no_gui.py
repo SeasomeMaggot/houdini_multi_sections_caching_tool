@@ -4,7 +4,10 @@ import hou
 
 frames = 10
 
-#-----------Input------------------
+#------输入每个节点分配的帧数---------
+
+#---使用前请选择一个File Cache节点，并确保它的输入端已连接
+#---请勿使用$OS，请勿使用Constructed路径
 
 try:
     selNode = hou.selectedNodes()[0]
