@@ -8,7 +8,7 @@ import hou
 
 #------输入每个节点分配的帧数---------
 
-frames = 10 #帧
+frames = 3
 
 #------输入每个节点分配的帧数---------
 
@@ -30,7 +30,7 @@ except:
     
 start_frame = selNode.parm('f1').eval()
 end_frame = selNode.parm('f2').eval()
-sections = int((end_frame-start_frame+1)/frames)    
+sections = int((end_frame-start_frame+1)/frames+1)    
 #-------------------------------pick up frame # from selected node---------------------------------    
 
 upNode = selNode.input(0)
