@@ -2,7 +2,7 @@ import hou
 
 #-----------Input------------------
 
-sections = 10
+frames = 10
 
 #-----------Input------------------
 
@@ -17,7 +17,7 @@ except:
     
 start_frame = selNode.parm('f1').eval()
 end_frame = selNode.parm('f2').eval()
-fl = int((end_frame-start_frame+1)/sections)    
+sections = int((end_frame-start_frame+1)/frames)    
 #-------------------------------pick up frame # from selected node---------------------------------    
 
 upNode = selNode.input(0)
@@ -51,9 +51,9 @@ for i in range(sections):
     n.parmTuple('f').deleteAllKeyframes()
     
     if i == sections -1:        
-        n.parmTuple('f').set((start_frame+i*fl,end_frame,1))
+        n.parmTuple('f').set((start_frame+i*frames,end_frame,1))
         
     else:
-        n.parmTuple('f').set((start_frame+i*fl,start_frame+(i+1)*fl-1,1))
+        n.parmTuple('f').set((start_frame+i*frames,start_frame+(i+1)*frames-1,1))
         
     n.parm('cookoutputnode').pressButton()
