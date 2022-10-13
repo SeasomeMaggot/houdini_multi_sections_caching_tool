@@ -70,3 +70,5 @@ for i in range(sections):
         n.parmTuple('f').set((start_frame+i*frames,start_frame+(i+1)*frames-1,1))
         
     n.parm('cookoutputnode').pressButton()
+
+subNode.setName('DeleteThisAfterFinish')    
