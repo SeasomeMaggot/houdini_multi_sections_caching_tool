@@ -10,4 +10,4 @@ This tool only works in Houdini 19 or later with python3
 Copy the script to the python source editor. change the 'sections' to any interger you want. Then, select a File Cache node (No $OS in file path, No constructed file path, filecache node must have an input). Then click the apply button and the script will run.
 
 # PS:
-I found that Qt makes PDG fail during coding. So I delete all the gui.
+I found that Qt makes PDG fail during coding.
