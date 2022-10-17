@@ -8,7 +8,7 @@ import hou
 
 #------输入每个节点分配的帧数---------
 
-frames = 3
+frames = int(float(hou.ui.readInput('Input Frame number for each section',initial_contents='10')[-1]))
 
 #------输入每个节点分配的帧数---------
 
